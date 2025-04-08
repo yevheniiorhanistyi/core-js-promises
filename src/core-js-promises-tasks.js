@@ -93,7 +93,7 @@ function getFirstPromiseResult(promises) {
             resolve(result);
           }
         })
-        .catch(() => {});
+        .catch(() => { });
     });
 
     setTimeout(() => {
@@ -159,8 +159,14 @@ function getAllResult(promises) {
  * [promise1, promise4, promise3] => Promise.resolved('104030')
  * [promise1, promise4, promise3, promise2] => Promise.resolved('10403020')
  */
-function queuePromises(/* promises */) {
-  throw new Error('Not implemented');
+function queuePromises(promises) {
+  return promises.reduce((acc, curr) => {
+    return acc.then((accResult) => {
+      return curr.then((currResult) => {
+        return accResult + currResult;
+      });
+    });
+  }, Promise.resolve(''));
 }
 
 module.exports = {
