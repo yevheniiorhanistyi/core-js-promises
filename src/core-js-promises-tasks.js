@@ -57,9 +57,7 @@ function getPromiseResult(source) {
  * [Promise.reject(1), Promise.reject(2), Promise.reject(3)]    => Promise rejected
  */
 function getFirstResolvedPromiseResult(promises) {
-  return Promise.race(promises)
-    .then((result) => result)
-    .catch(() => Promise.reject());
+  return Promise.any(promises);
 }
 
 /**
@@ -82,26 +80,7 @@ function getFirstResolvedPromiseResult(promises) {
  * [promise3, promise4, promise6] => Promise rejected with 6
  */
 function getFirstPromiseResult(promises) {
-  return new Promise((resolve, reject) => {
-    let isResolved = false;
-
-    promises.forEach((promise) => {
-      promise
-        .then((result) => {
-          if (!isResolved) {
-            isResolved = true;
-            resolve(result);
-          }
-        })
-        .catch(() => { });
-    });
-
-    setTimeout(() => {
-      if (!isResolved) {
-        reject(new Error('No promise resolved'));
-      }
-    }, 0);
-  });
+  return Promise.race(promises);
 }
 
 /**
@@ -116,9 +95,7 @@ function getFirstPromiseResult(promises) {
  * [Promise.resolve(1), Promise.reject(2), Promise.resolve(3)] => Promise rejected with 2
  */
 function getAllOrNothing(promises) {
-  return new Promise((resolve, reject) => {
-    Promise.race(promises).then(resolve).catch(reject);
-  });
+  return Promise.all(promises);
 }
 
 /**
